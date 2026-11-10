@@ -1,0 +1,36 @@
+[package]
+name = "tari-ootle-faucet"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+tari_template_lib = { version = "0.40" }
+
+[dev-dependencies]
+tari_template_test_tooling = "0.53"
+
+[profile.release]
+opt-level = 's'
+lto = true
+codegen-units = 1
+panic = 'abort'
+strip = true
+
+# Wasmer/Cranelift (used transitively by tari_template_test_tooling for in-process
+# WASM test execution) are extremely slow in debug builds — this profile override
+# is real, copied from upstream's own template, keep it.
+[profile.dev.package.wasmer]
+opt-level = 2
+[profile.dev.package.wasmer-compiler]
+opt-level = 2
+[profile.dev.package.wasmer-compiler-cranelift]
+opt-level = 2
+[profile.dev.package.cranelift-codegen]
+opt-level = 2
+[profile.dev.package.cranelift-frontend]
+opt-level = 2
+[profile.dev.package.cranelift-entity]
+opt-level = 2
+
+[lib]
+crate-type = ["cdylib"]
